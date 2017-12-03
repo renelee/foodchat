@@ -47,7 +47,6 @@
         $('#message').keydown(function (e) {
           if(e.keyCode == 13){
             sendMessage();
-
             e.preventDefault();
           }
         });
@@ -66,11 +65,6 @@
          user = data.username;
          $('#name-dialog-overlay').hide();
          $('#message').focus();
-         // document.body.innerHTML = '<ul id = "message-container"></ul>\
-         // <form action=""><input type = "text" id = "message">\
-         // <button type = "button" name = "button" onclick = "sendMessage()">Send</button>\
-         // <ul id = "message-container"></ul>\
-         // </form>';
       });
       function sendMessage() {
          var msg = $('#message').val();
@@ -86,8 +80,6 @@
                data.user + '</b>: ' + data.message + '</div>'
          }
       })
-
-
     </script>
 
   <body>
@@ -106,34 +98,5 @@
     <form action=""><input type = "text" id = "message" autocomplete="off">
       <button type = "button" name = "button" onclick = "sendMessage()">Send</button>
     </form>
-
-    <!-- <div id = "error-container"></div>
-      <form action="">
-        <input id = "name" type = "text" name = "name" value = ""  placeholder = "Enter your name!"/>
-        <button type = "button" name = "button" onclick = "setUsername()">
-           Let me chat!
-        </button>
-      </form> -->
-
-
-<!--
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form> -->
-    
-
-<!-- 
-      // $(function () {
-      //   var socket = io();
-      //   $('form').submit(function(){
-      //     socket.emit('chat message', $('#m').val());
-      //     $('#m').val('');
-      //     return false;
-      //   });
-      //   socket.on('chat message', function(msg){
-      //     $('#messages').append($('<li>').text(msg));
-      //   });
-      // }); -->
   </body>
 </html>
