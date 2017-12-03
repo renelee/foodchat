@@ -26,13 +26,13 @@ io.on('connection', function(socket){
 	socket.on('msg', function(data) {
       //Send message to everyone
       io.sockets.emit('newmsg', data);
-      if (data.message.indexOf("food") == -1 || data.message.indexOf("eat") == -1) {
+      if (data.message.indexOf("food") == -1 && data.message.indexOf("eat") == -1) {
       	return;
       }
       //var coordinates = getLocation();
       var url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="
       // make location request
-      url += "-33.8670522,151.1957362"
+      url += locations[data.user]
       url += "&radius=500&type=restaurant&key="
       url += place_api
       request(url, { json: true }, (err, res, body) => {
