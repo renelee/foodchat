@@ -11,34 +11,69 @@
       #message-container { list-style-type: none; margin: 0; padding: 0; }
       #message-container li { padding: 5px 10px; }
       #message-container li:nth-child(odd) { background: #eee; }
+      #name-dialog-overlay {
+        position: relative;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 10;
+      }
+      #name-dialog {
+        position: relative;
+        width: 300px;
+        padding: 20px;
+        top: 25%;
+        left: 25%;
+        background-color: white;
+      }
     </style>
   </head>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+      $(document).ready(function () {
+        $('#input-name').focus();
+        $('#input-name').keydown(function (e){
+          if(e.keyCode == 13){
+            setUsername();
+          }
+        });
+
+        $('#message').keydown(function (e) {
+          if(e.keyCode == 13){
+            sendMessage();
+
+            e.preventDefault();
+          }
+        });
+      });
+      
 
       var socket = io();
       function setUsername() {
-         socket.emit('setUsername', document.getElementById('name').value);
+         socket.emit('setUsername', $('#input-name').val());
       };
       var user;
       socket.on('userExists', function(data) {
-         document.getElementById('error-container').innerHTML = data;
+         $('#error-container').text(data);
       });
       socket.on('userSet', function(data) {
          user = data.username;
-         document.body.innerHTML = '<ul id = "message-container"></ul>\
-         <form action=""><input type = "text" id = "message">\
-         <button type = "button" name = "button" onclick = "sendMessage()">Send</button>\
-         <ul id = "message-container"></ul>\
-         </form>';
+         $('#name-dialog-overlay').hide();
+         $('#message').focus();
+         // document.body.innerHTML = '<ul id = "message-container"></ul>\
+         // <form action=""><input type = "text" id = "message">\
+         // <button type = "button" name = "button" onclick = "sendMessage()">Send</button>\
+         // <ul id = "message-container"></ul>\
+         // </form>';
       });
       function sendMessage() {
-         var msg = document.getElementById('message').value;
+         var msg = $('#message').val();
          if(msg) {
             socket.emit('msg', {message: msg, user: user});
          }
+         $('#message').val('');
       }
       socket.on('newmsg', function(data) {
          if(user) {
@@ -47,17 +82,34 @@
          }
       })
 
-      
+
     </script>
 
   <body>
-    <div id = "error-container"></div>
+    <div id="name-dialog-overlay">
+      <div id="name-dialog">
+        <div id = "error-container"></div>
+        <p>Please enter your name:</p>
+        <input id="input-name" type="text">
+        <button type="button" onclick="setUsername()">
+          Enter chat
+        </button>
+      </div>
+    </div>
+
+    <ul id = "message-container"></ul>
+   <form action=""><input type = "text" id = "message">
+   <button type = "button" name = "button" onclick = "sendMessage()">Send</button>
+   <ul id = "message-container"></ul>
+   </form>
+
+    <!-- <div id = "error-container"></div>
       <form action="">
         <input id = "name" type = "text" name = "name" value = ""  placeholder = "Enter your name!"/>
         <button type = "button" name = "button" onclick = "setUsername()">
            Let me chat!
         </button>
-      </form>
+      </form> -->
 
 
 <!--
