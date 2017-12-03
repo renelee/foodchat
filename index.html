@@ -90,10 +90,22 @@
          $('#message').val('');
          return false;
       }
+      var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet']
+      var userColors = {};
+      var nextColor = 0;
+      function displayMessage(user, msg) {
+        if (!(user in userColors)) {
+          userColors[user] = colors[nextColor];
+          nextColor = (nextColor + 1) % colors.length
+        } 
+        var color = userColors[user];
+        document.getElementById('message-container').innerHTML += '<div><span style="font-weight: bold; color:' + color + '">' + 
+           user + '</span>: ' + msg + '</div>';
+      }
+
       socket.on('newmsg', function(data) {
          if(user) {
-            document.getElementById('message-container').innerHTML += '<div><b>' + 
-               data.user + '</b>: ' + data.message + '</div>'
+            displayMessage(data.user, data.message);
          }
       })
 
