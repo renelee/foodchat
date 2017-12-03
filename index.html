@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #message-container { list-style-type: none; margin: 0; padding: 0; }
+      #message-container li { padding: 5px 10px; }
+      #message-container li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+
+      var socket = io();
+      function setUsername() {
+         socket.emit('setUsername', document.getElementById('name').value);
+      };
+      var user;
+      socket.on('userExists', function(data) {
+         document.getElementById('error-container').innerHTML = data;
+      });
+      socket.on('userSet', function(data) {
+         user = data.username;
+         document.body.innerHTML = '<ul id = "message-container"></ul>\
+         <form action=""><input type = "text" id = "message">\
+         <button type = "button" name = "button" onclick = "sendMessage()">Send</button>\
+         <ul id = "message-container"></ul>\
+         </form>';
+      });
+      function sendMessage() {
+         var msg = document.getElementById('message').value;
+         if(msg) {
+            socket.emit('msg', {message: msg, user: user});
+         }
+      }
+      socket.on('newmsg', function(data) {
+         if(user) {
+            document.getElementById('message-container').innerHTML += '<div><b>' + 
+               data.user + '</b>: ' + data.message + '</div>'
+         }
+      })
+
+      
+    </script>
+
+  <body>
+    <div id = "error-container"></div>
+      <form action="">
+        <input id = "name" type = "text" name = "name" value = ""  placeholder = "Enter your name!"/>
+        <button type = "button" name = "button" onclick = "setUsername()">
+           Let me chat!
+        </button>
+      </form>
+
+
+<!--
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form> -->
+    
+
+<!-- 
+      // $(function () {
+      //   var socket = io();
+      //   $('form').submit(function(){
+      //     socket.emit('chat message', $('#m').val());
+      //     $('#m').val('');
+      //     return false;
+      //   });
+      //   socket.on('chat message', function(msg){
+      //     $('#messages').append($('<li>').text(msg));
+      //   });
+      // }); -->
+  </body>
+</html>
