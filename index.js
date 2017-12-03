@@ -7,13 +7,16 @@ app.get('/', function(req, res){
 });
 
 users = [];
+var locations = {};
 io.on('connection', function(socket){
 	socket.on('setUsername', function(data) {
-	  if(users.indexOf(data) > -1) {
-	  	socket.emit('userExists', data + ' username is taken! Try some other username.');
+		name = data.split(';');
+	  if(users.indexOf(name[0]) > -1) {
+	  	socket.emit('userExists', name[0] + ' username is taken! Try some other username.');
 	  } else {
-		users.push(data);
-		socket.emit('userSet', {username: data});
+		users.push(name[0]);
+		locations[name[0]] = name[1]
+		socket.emit('userSet', {username: name[0]});
 	  }
 	})
 
@@ -21,10 +24,6 @@ io.on('connection', function(socket){
       //Send message to everyone
       io.sockets.emit('newmsg', data);
    	})
-
-	// socket.on('chat message', function(msg){
-	// 	io.emit('chat message', msg);
-	// });
 });
 
 http.listen(3000, function(){

@@ -51,11 +51,13 @@
           }
         });
       });
-      
 
       var socket = io();
+      var place;
       function setUsername() {
-         socket.emit('setUsername', $('#input-name').val());
+        getLocation();
+        setTimeout(function(){ socket.emit('setUsername', $('#input-name').val()+";"+place); }, 5000);
+        
       };
       var user;
       socket.on('userExists', function(data) {
@@ -80,6 +82,18 @@
                data.user + '</b>: ' + data.message + '</div>'
          }
       })
+
+      function getLocation()
+      {
+      if (navigator.geolocation)
+        {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        }
+      }
+      function showPosition(position)
+      {
+        place = position.coords.latitude + "," + position.coords.longitude;
+      }
     </script>
 
   <body>
