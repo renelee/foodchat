@@ -30,6 +30,9 @@
         left: 25%;
         background-color: white;
       }
+      .suggestions {
+        display: none;
+      }
     </style>
   </head>
 
@@ -80,6 +83,33 @@
                data.user + '</b>: ' + data.message + '</div>'
          }
       })
+      socket.on('suggestions', function(data) {
+        suggestionsHTML = '<button id="' + data.suggestionsId + 'button">Show suggestions</button>';
+
+
+        suggestionsHTML += '<ul id="' + data.suggestionsId + '" class="suggestions">';
+        for (var i=0; i<5; i++) {
+          suggestionsHTML += '<li class="suggestion">' + data.restaurantNames[i] + '</li>';
+        }
+        suggestionsHTML += '</ul>';
+
+        document.getElementById('message-container').
+          innerHTML += suggestionsHTML;
+
+        $('#' + data.suggestionsId + 'button').click(function() {
+          var suggestionsId ='#' + data.suggestionsId;
+          var suggestionsButtonId = suggestionsId + 'button';
+          if ($(suggestionsId).is(':visible')) {
+            $(suggestionsId).slideUp();
+            $(suggestionsButtonId).text('Show suggestions');
+          } else {
+            $(suggestionsId).slideDown();
+            $(suggestionsButtonId).text('Hide suggestions');
+          } 
+        });
+      })
+
+      
     </script>
 
   <body>
@@ -99,4 +129,14 @@
       <button type = "button" name = "button" onclick = "sendMessage()">Send</button>
     </form>
   </body>
+
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+          x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+  </script>
 </html>
