@@ -103,8 +103,12 @@
 
 
         suggestionsHTML += '<ul id="' + data.suggestionsId + '" class="suggestions">';
-        for (var i=0; i<5; i++) {
-          suggestionsHTML += '<li class="suggestion">' + data.restaurantNames[i] + '</li>';
+        // for (var i=0; i<5; i++) {
+        //   suggestionsHTML += '<li class="suggestion">' + data.restaurantNames[i] + '</li>';
+        // }
+        for (var r in data.restaurantNames) {
+          url = "https://www.google.com/maps/place/?q=place_id:" + data.restaurantNames[r]
+          suggestionsHTML += '<li class="suggestion"><a target="_blank" href="' + url + '">' + r + '</a></li>';
         }
         suggestionsHTML += '</ul>';
 
