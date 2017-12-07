@@ -70,7 +70,7 @@
       var place;
       function setUsername() {
         getLocation();
-        setTimeout(function(){ socket.emit('setUsername', $('#input-name').val()+";"+place); }, 5000);
+        setTimeout(function(){ socket.emit('setUsername', $('#input-name').val()+";"+place); }, 10000);
         
       };
       var user;
